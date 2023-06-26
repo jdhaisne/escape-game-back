@@ -1,4 +1,5 @@
 const express = require("express");
+import cors from "cors";
 const app = express();
 const port = 3000;
 var bodyParser = require("body-parser");
@@ -32,6 +33,7 @@ async function main() {
 
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 
+  app.use(cors());
   app.get("/", async (req, res) => {
     res.send("Hello World!");
   });
