@@ -53,4 +53,4 @@ npm run start
 npm run build
  ```
 
-## @SuperCoolNinja - 2023
+## @SuperCoolNinja @jdhaisne @wonderlily4 - 2023
