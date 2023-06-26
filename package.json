@@ -1,0 +1,25 @@
+{
+  "name": "escape-game-back",
+  "version": "1.0.0",
+  "description": "school project",
+  "main": "app.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdhaisne/escape-game-back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdhaisne/escape-game-back/issues"
+  },
+  "homepage": "https://github.com/jdhaisne/escape-game-back#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cros": "^1.0.1",
+    "express": "^4.18.2"
+  }
+}
