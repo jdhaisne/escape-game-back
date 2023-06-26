@@ -17,6 +17,14 @@ What this project should do :
 
 </br>
 
+## Stack : 
+- NodeJS
+- Mongoose
+- ExpressJS.
+- Typescript
+
+</br>
+
 ## Roles : 
 - Users : The customers who are looking to book a game room at the Escape Game.
 - Admin : The manager of the Escape Game who can configure the availability of the game rooms.
