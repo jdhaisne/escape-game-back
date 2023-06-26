@@ -37,20 +37,37 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 
-// PÖST LOGIN : 
+// POST LOGIN:
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        const user = await Users.findOne({ name: req.body.name }).exec();
-        user?.password && logger.info(user.password)
-        user?.password && bcrypt.compare(req.body.password, user.password, function (err, result) {
-          if (result) res.send("logged");
-          else res.send("not logged");
-        });
-    } 
-    catch (err : any) {
-        logger.error(err)
-        res.status(500).send("Internal Server Error");
+      const { name, password } = req.body;
+      const user = await Users.findOne({ name }).exec();
+  
+      if (!user) {
+        return res.status(401).send('User not found');
+      }
+  
+      if (typeof password !== 'string') {
+        return res.status(400).send('Invalid password');
+      }
+  
+      if (!user.password) {
+        return res.status(400).send('No password set for this user');
+      }
+  
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+  
+      if (isPasswordValid) {
+        return res.send('Logged in successfully');
+      } else {
+        return res.status(401).send('Incorrect password');
+      }
+    } catch (err: any) {
+      logger.error(err);
+      return res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 export { router as users_routes };
