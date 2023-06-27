@@ -3,6 +3,8 @@ import express, { Router, Request, Response } from 'express';
 import { Users } from '../models/EMUser';
 import { logger } from '../services/ESLogger';
 import bcrypt from "bcrypt";
+import validator from 'validator';
+import { IUser } from '../interfaces/IUser_data';
 
 
 const router: Router = express.Router();
@@ -28,14 +30,24 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const saltRounds = 10;
     const hash = await bcrypt.hash(req.body.password, saltRounds);
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
+
+
+    validator.isEmail(req.body.email);
+    validator.isLength(req.body.firstname, {min : 2, max: 50});
+    validator.isLength(req.body.lastname, {min : 2, max: 50});
+    validator.matches(req.body.password, passwordRegex);
+
+
     await Users.create({
-      name: req.body.name,
-      firstName: req.body.firstName,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       password: hash,
-      mail: req.body.mail,
-      dateOfBirth: req.body.dateOfBirth,
-      isAdmin: false
-    });
+      email: req.body.email,
+      birthday: req.body.birthday,
+      isAdmin: false,
+    } as IUser);
+
     logger.info(req.body.password);
     res.send("done");
   } catch (err: any) {
