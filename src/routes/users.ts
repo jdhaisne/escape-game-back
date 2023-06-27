@@ -24,7 +24,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 
-// PÖST USERS : 
+// POST USERS : 
 router.post('/', async (req: Request, res: Response) => {
 
   try {
@@ -32,12 +32,20 @@ router.post('/', async (req: Request, res: Response) => {
     const hash = await bcrypt.hash(req.body.password, saltRounds);
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
 
+    if(!validator.isEmail(req.body.email))
+    {
+      return res.status(400).json({message : "please set a valid email"});
+    }
 
-    validator.isEmail(req.body.email);
-    validator.isLength(req.body.firstname, {min : 2, max: 50});
-    validator.isLength(req.body.lastname, {min : 2, max: 50});
-    validator.matches(req.body.password, passwordRegex);
+    if(!validator.isLength(req.body.firstname, {min : 2, max : 50}) || !validator.isLength(req.body.lastname, {min : 2, max : 50}) )
+    {
+      return res.status(400).json({message : 'should have at least 2 character and 50 max'})
+    }
 
+    if(!validator.matches(req.body.password, passwordRegex))
+    {
+      return res.status(400).json({message : 'Your password should contain special caracters one upperCase and should have at least 6 min and 20 max caracters'})
+    }
 
     await Users.create({
       firstname: req.body.firstname,
@@ -49,6 +57,7 @@ router.post('/', async (req: Request, res: Response) => {
     } as IUser);
 
     logger.info(req.body.password);
+    
     res.send("done");
   } catch (err: any) {
     logger.error(err);
