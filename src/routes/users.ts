@@ -26,11 +26,14 @@ router.get('/', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
     try {
         const saltRounds = 10;
+        console.log(req.body.password)
         const hash = await bcrypt.hash(req.body.password, saltRounds);
+        
         await Users.create({ name: req.body.name, password: hash });
         logger.info(req.body.password);
         res.send("done");
     } catch (err : any) {
+      console.log(err)
         logger.error(err);
         res.status(500).send("Internal Server Error");
     }
