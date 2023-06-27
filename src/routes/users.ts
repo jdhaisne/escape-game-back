@@ -5,6 +5,7 @@ import { logger } from '../services/ESLogger';
 import bcrypt from "bcrypt";
 import validator from 'validator';
 import { IUser } from '../interfaces/IUser_data';
+import { IValidationRule } from '../interfaces/IValidation';
 
 
 const router: Router = express.Router();
@@ -26,52 +27,67 @@ router.get('/', async (req: Request, res: Response) => {
 
 // POST USERS : 
 router.post('/', async (req: Request, res: Response) => {
+  const saltRounds = 10;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
 
-  try {
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(req.body.password, saltRounds);
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
+  const requiredFields = ['firstname', 'lastname', 'email', 'password', 'birthday'];
+  const missingFields = requiredFields.filter(field => !(field in req.body));
 
-    if(!validator.isEmail(req.body.email))
-    {
-      return res.status(400).json({message : "please set a valid email"});
-    }
-
-    if(!validator.isLength(req.body.firstname, {min : 2, max : 50}) || !validator.isLength(req.body.lastname, {min : 2, max : 50}) )
-    {
-      return res.status(400).json({message : 'should have at least 2 character and 50 max'})
-    }
-
-    if(!validator.matches(req.body.password, passwordRegex))
-    {
-      return res.status(400).json({message : 'Your password should contain special caracters one upperCase and should have at least 6 min and 20 max caracters'})
-    }
-
-    await Users.create({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      password: hash,
-      email: req.body.email,
-      birthday: req.body.birthday,
-      isAdmin: false,
-    } as IUser);
-
-    logger.info(req.body.password);
-    
-    res.send("done");
-  } catch (err: any) {
-    logger.error(err);
-    res.status(500).send("Internal Server Error");
+  if (missingFields.length > 0 ) {
+    const missingFieldsMessage = missingFields.join(', ');
+    const errorMessage = `Missing fields: ${missingFieldsMessage}`;
+    return res.status(400).json({ message: errorMessage });
   }
 
+  let hash;
+  try {
+    hash = await bcrypt.hash(req.body.password, saltRounds);
+  } catch (error) {
+    logger.error(`Error while hashing password: ${error}`);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+
+  const rules: IValidationRule[] = [
+    { condition: validator.isEmail(req.body.email), message: "Please enter a valid email" },
+    { condition: validator.isLength(req.body.firstname, { min: 2, max: 50 }) && validator.isLength(req.body.lastname, { min: 2, max: 50 }), message: "Names should have at least 2 characters and a maximum of 50 characters" },
+    { condition: validator.matches(req.body.password, passwordRegex), message: "Your password should contain special characters, at least one uppercase letter, and should be between 6 and 20 characters long" },
+    { condition: validator.isDate(req.body.birthday, { format: 'DD/MM/YYYY' }), message: "Please enter a valid date of birth in the format DD/MM/YYYY" }
+  ];
+
+  
+  const validationErrors = rules.filter(rule => !rule.condition).map(rule => rule.message);
+
+  if (validationErrors.length > 0) {
+    return res.status(400).json({ message: validationErrors.join(', ') });
+  }
+
+  const user: IUser = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    password: hash,
+    email: req.body.email,
+    birthday: req.body.birthday,
+    isAdmin: false,
+  };
+
+  try {
+    await Users.create(user);
+    logger.debug(`User created: ${user}`)
+    res.json({ message: "done" });
+  } catch (error) {
+    logger.error(`Error while creating user: ${error}`);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
+
+
 
 
 // POST LOGIN:
 router.post('/login', async (req: Request, res: Response) => {
   try {
-    const { mail, password } = req.body;
-    const user = await Users.findOne({ mail }).exec();
+    const { email, password } = req.body;
+    const user = await Users.findOne({ email }).exec();
 
     if (!user) {
       return res.status(401).send('User not found');
@@ -92,12 +108,10 @@ router.post('/login', async (req: Request, res: Response) => {
     } else {
       return res.status(401).send('Incorrect password');
     }
-  } catch (err: any) {
-    logger.error(err);
-    return res.status(500).send('Internal Server Error');
+  } catch (error: any) {
+    logger.error(`Error while logging in: ${error}`)
+    res.status(500).send('Internal Server Error' + error);
   }
 });
-
-
 
 export { router as users_routes };
