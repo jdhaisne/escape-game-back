@@ -24,6 +24,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 // PÖST USERS : 
 router.post('/', async (req: Request, res: Response) => {
+
   try {
     const saltRounds = 10;
     const hash = await bcrypt.hash(req.body.password, saltRounds);
@@ -41,6 +42,7 @@ router.post('/', async (req: Request, res: Response) => {
     logger.error(err);
     res.status(500).send("Internal Server Error");
   }
+
 });
 
 

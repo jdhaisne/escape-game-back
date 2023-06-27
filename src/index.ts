@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv';
 import cors from "cors";
-import bodyParser from "body-parser";
+// import bodyParser from "body-parser";
 import { logger } from "./services/ESLogger";
 import { connectDatabase } from "./db";
 import { users_routes } from "./routes/users";
@@ -12,7 +12,9 @@ const port = 3000;
 dotenv.config();
 
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cors());
 
 
