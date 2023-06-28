@@ -30,10 +30,23 @@ router.get('/:id', async (req: Request, res: Response) => {
   
 
 // POST ALLOW THE USER TO DELETE HIS ACCOUNT : 
-router.get('/:id/delete-my-account', async (req: Request, res: Response) => {
-    logger.debug(req.params.id)
-    res.send({message : "ACCOUNT DELETED"})
-}); 
+router.post('/:id/delete-my-account', async (req: Request, res: Response) => {
+  const userId = req.params.id;
+
+  try {
+    // Delete the user
+    const result = await Users.deleteOne({ _id: userId });
+
+    if (result.deletedCount && result.deletedCount > 0) {
+      res.status(200).json({ message: 'Account deleted' });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    logger.error(`Error deleting user: ${error}`);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
   
 
 export { router as users_routes };

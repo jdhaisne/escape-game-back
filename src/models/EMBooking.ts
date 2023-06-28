@@ -8,4 +8,4 @@ const bookingsSchema: Schema = new Schema({
     number_of_players: { type: Number, required: true },
 });
 
-export const Booking = model<IBooking>('Booking', bookingsSchema);
+export const Bookings = model<IBooking>('Booking', bookingsSchema);

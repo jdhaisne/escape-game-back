@@ -5,6 +5,8 @@ import { logger } from "./services/ESLogger";
 import { connectDatabase } from "./db";
 import { auth_routes } from "./routes/auth";
 import { users_routes } from "./routes/users";
+import { rooms_routes } from "./routes/rooms";
+import { bookings_routes } from "./routes/bookings";
 import { seedRooms } from "./seeders/roomSeeder";
 
 
@@ -18,21 +20,20 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cors());
 
-
+app.get("/", (_, res) => res.send("Hello world from home !"))
 app.use("/auth", auth_routes)
 app.use("/users", users_routes)
-app.get("/", (_, res) => res.send("Hello world from home !"))
-
+app.use("/rooms", rooms_routes)
+app.use("/bookings", bookings_routes)
 
 
 
 app.listen(port, async () => {
-  
   // Connect to MongoDB
   await connectDatabase();
 
   // Seed Rooms : 
   seedRooms();
-  
+
   logger.info(`app listening on http://localhost:${port}`)
 });
