@@ -7,7 +7,6 @@ import { auth_routes } from "./routes/auth";
 import { users_routes } from "./routes/users";
 import { rooms_routes } from "./routes/rooms";
 import { bookings_routes } from "./routes/bookings";
-import { admin_routes } from "./routes/admin";
 import { seedRooms } from "./seeders/roomSeeder";
 
 
@@ -26,7 +25,6 @@ app.use("/auth", auth_routes)
 app.use("/users", users_routes)
 app.use("/rooms", rooms_routes)
 app.use("/bookings", bookings_routes)
-app.use("/admin", admin_routes)
 
 
 

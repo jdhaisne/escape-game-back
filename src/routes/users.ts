@@ -47,6 +47,5 @@ router.post('/:id/delete-my-account', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to delete user' });
   }
 });
-  
 
 export { router as users_routes };
