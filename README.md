@@ -126,7 +126,7 @@ What this project should do :
     "_id": "64a078e5f4714480c99fae17",
     "user_id": "649d514a32dc347712bcaa39",
     "room_id": "649d855f0b0b1ebfcf77e888",
-    "date_and_time": 1998,
+    "date_and_time": ISODate("2022-05-04T12:00:53.307Z"),
     "number_of_players": 2,
     "list_of_participants": [
       {
@@ -152,7 +152,7 @@ What this project should do :
   {
     "user_id": "649d514a32dc347712bcaa39",
     "room_id": "649d855f0b0b1ebfcf77e888",
-    "date_and_time": 1998,
+    "date_and_time": ISODate("2022-05-04T12:00:53.307Z"),
     "number_of_players": 2,
     "list_of_participants": [
       {
@@ -175,7 +175,7 @@ What this project should do :
   {
     "user_id": "649d514a32dc347712bcaa39",
     "room_id": "649d855f0b0b1ebfcf77e888",
-    "date_and_time": 1998,
+    "date_and_time": ISODate("2022-05-04T12:00:53.307Z"),
     "number_of_players": 2,
     "list_of_participants": [
       {
@@ -198,7 +198,7 @@ What this project should do :
   {
     "user_id": "649d514a32dc347712bcaa39",
     "room_id": "649d855f0b0b1ebfcf77e888",
-    "date_and_time": 1998,
+    "date_and_time": ISODate("2022-05-04T12:00:53.307Z"),
     "number_of_players": 2,
     "list_of_participants": [
       {
