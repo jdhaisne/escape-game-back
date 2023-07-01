@@ -39,19 +39,19 @@ What this project should do :
 - [**POST**]  : `/auth/login`  : post data should be send like this : 
 ```json
 {
-    email : "valid_email@email.com",
-    password : "Pass@word42"
+    "email" : "valid_email@email.com",
+    "password": "Pass@word42"
 }
 ```
 
 - [**POST**] : `/auth/register` : post data should be send like this :  
 ```json
 { 
-    'firstname' : "john",
-    'lastname' : "doe",
-    'email' : "valid_email@email.com",
-    'password' : "Pass@word42",
-    'birthday' : "09/07/1998"
+    "firstname" : "john",
+    "lastname" : "doe",
+    "email" : "valid_email@email.com",
+    "password" : "Pass@word42",
+    "birthday" : "09/07/1998"
 }
 ```
 </br>
