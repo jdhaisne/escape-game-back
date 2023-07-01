@@ -11,20 +11,6 @@ import { IValidationRule } from '../interfaces/IValidation';
 const router: Router = express.Router();
 
 
-// GET USERS AUTH : 
-router.get('/', async (req: Request, res: Response) => {
-  try {
-    const users = await Users.find({}).exec();
-    logger.info(users)
-    res.send(users);
-  }
-  catch (error: any) {
-    logger.error(error)
-    res.status(500).send("Internal Server Error");
-  }
-});
-
-
 // POST REGISTER AUTH : 
 router.post('/register', async (req: Request, res: Response) => {
   const saltRounds = 10;
