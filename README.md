@@ -43,6 +43,18 @@ What this project should do :
     "password": "Pass@word42"
 }
 ```
+You will get in return the data related to the user connected.
+<br>
+usefull for the local storage.
+```json
+  {
+    "user_id": "_id",
+    "firstname": "john",
+    "lastname": "doe",
+    "email": "valid_email@email.com",
+    "birthday" : "09/07/1998"
+  }
+```
 
 - [**POST**] : `/auth/register` : post data should be send like this :  
 ```json

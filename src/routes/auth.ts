@@ -69,36 +69,32 @@ router.post('/register', async (req: Request, res: Response) => {
 
 
 // POST LOGIN AUTH:
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/auth/login', async (req : Request, res : Response) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
-    const user = await Users.findOne({ email }).exec();
-
+    const user = await Users.findOne({ email });
     if (!user) {
-      return res.status(401).send('User not found');
-    }
-
-    if (typeof password !== 'string') {
-      return res.status(400).send('Invalid password');
-    }
-
-    if (!user.password) {
-      return res.status(400).send('No password set for this user');
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (isPasswordValid) {
-      return res.send('Logged in successfully');
-    } else {
-      return res.status(401).send('Incorrect password');
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Identifiants invalides' });
     }
-  } catch (error: any) {
-    logger.error(`Error while logging in: ${error}`)
-    res.status(500).send('Internal Server Error' + error);
+
+    return res.status(200).json({
+      user_id: user._id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      birthday : user.birthday
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred during login' });
   }
 });
-
 
 
 
