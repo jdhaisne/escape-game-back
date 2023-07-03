@@ -149,6 +149,7 @@ What this project should do :
 
 - [**GET**] : `/bookings/:user_id` : allow you to get a specific bookings from a specific user :
 ```json 
+[
   {
     "user_id": "649d514a32dc347712bcaa39",
     "room_id": "649d855f0b0b1ebfcf77e888",
@@ -167,6 +168,7 @@ What this project should do :
       }
     ]
   }
+]
 ```
 
 
