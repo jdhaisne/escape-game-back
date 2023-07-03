@@ -48,7 +48,7 @@ export const seedBooking = async () => {
                 logger.debug(`Booking created: ${JSON.stringify(newBooking)}`);
             }
         }
-        
+        logger.debug('Seed of Booking done.');
     } catch (error) {
         logger.debug(`Error while seeding Booking. ${error}`);
     }

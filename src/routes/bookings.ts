@@ -4,6 +4,7 @@ import { logger } from '../services/ESLogger';
 import { Users } from '../models/EMUser';
 import { Rooms } from '../models/EMRoom';
 import  mongoose from 'mongoose'
+// import { ObjectId } from 'mongoose';
 
 
 const router: Router = express.Router();
@@ -63,11 +64,17 @@ router.get('/:id', async (req: Request, res: Response) => {
         if (!userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-let doc = Bookings.aggregate([
-  {
-    $match: {user_id: {$eq: userId}}
-  },
-  {$lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'users' }}
+let doc = await Bookings.aggregate([
+
+  
+  {$match:{user_id: {$eq: new mongoose.Types.ObjectId(userId)}}},
+  {$lookup: { from: 'users', localField: 'user_id', foreignField: '_id', as: 'users' }},
+  {$lookup: { from: 'rooms', localField: 'room_id', foreignField: '_id', as: 'rooms' }},
+  // {$project: {
+  //   number_of_players: 1,
+  //   userMail: "$users.mail"
+  // }},
+  // { $unwind: "$userMail" }
 ])
         // const bookings = await Bookings.find({ user: userId });
 
