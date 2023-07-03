@@ -52,7 +52,8 @@ usefull for the local storage.
     "firstname": "john",
     "lastname": "doe",
     "email": "valid_email@email.com",
-    "birthday" : "09/07/1998"
+    "birthday" : "09/07/1998",
+    "isAdmin": false,
   }
 ```
 

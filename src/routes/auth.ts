@@ -87,7 +87,8 @@ router.post('/login', async (req: Request, res: Response) => {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
-        birthday: user.birthday
+        birthday: user.birthday,
+        isAdmin: user.isAdmin,
       };
       return res.status(200).json(userData);
     } else {
