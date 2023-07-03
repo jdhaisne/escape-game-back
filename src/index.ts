@@ -9,6 +9,8 @@ import { rooms_routes } from "./routes/rooms";
 import { bookings_routes } from "./routes/bookings";
 import { admin_routes } from "./routes/admin";
 import { seedRooms } from "./seeders/roomSeeder";
+import { seedUSer } from "./seeders/userSeeder";
+import { seedBooking } from "./seeders/bookingSeeder";
 
 
 
@@ -37,6 +39,9 @@ app.listen(port, async () => {
 
   // Seed Rooms : 
   seedRooms();
-
+  // Seed User
+  seedUSer();
+  // Seed Booking
+  seedBooking();
   logger.info(`app listening on http://localhost:${port}`)
 });

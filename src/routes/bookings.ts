@@ -3,6 +3,7 @@ import { Bookings } from '../models/EMBooking';
 import { logger } from '../services/ESLogger';
 import { Users } from '../models/EMUser';
 import { Rooms } from '../models/EMRoom';
+import  mongoose from 'mongoose'
 
 
 const router: Router = express.Router();
@@ -54,14 +55,23 @@ router.put('/:id', async (req, res) => {
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const userId = req.params.id;
+        // const db = mongoose.connection
+        // console.log('db',db )
+        // db.createView()
+        
 
         if (!userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+let doc = Bookings.aggregate([
+  {
+    $match: {user_id: {$eq: userId}}
+  },
+  {$lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'users' }}
+])
+        // const bookings = await Bookings.find({ user: userId });
 
-        const bookings = await Bookings.find({ user: userId });
-
-        res.json(bookings);
+        res.json(doc);
     } catch (error) {
         logger.error(`Error retrieving bookings: ${error}`);
         res.status(500).json({ error: 'Failed to retrieve bookings' });
