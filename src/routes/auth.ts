@@ -1,4 +1,3 @@
-
 import express, { Router, Request, Response } from 'express';
 import { Users } from '../models/EMUser';
 import { logger } from '../services/ESLogger';
@@ -7,11 +6,9 @@ import validator from 'validator';
 import { IUser } from '../interfaces/IUser';
 import { IValidationRule } from '../interfaces/IValidation';
 
-
 const router: Router = express.Router();
 
-
-// POST REGISTER AUTH : 
+// POST REGISTER AUTH:
 router.post('/register', async (req: Request, res: Response) => {
   const saltRounds = 10;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
@@ -19,7 +16,7 @@ router.post('/register', async (req: Request, res: Response) => {
   const requiredFields = ['firstname', 'lastname', 'email', 'password', 'birthday'];
   const missingFields = requiredFields.filter(field => !(field in req.body));
 
-  if (missingFields.length > 0 ) {
+  if (missingFields.length > 0) {
     const missingFieldsMessage = missingFields.join(', ');
     const errorMessage = `Missing fields: ${missingFieldsMessage}`;
     return res.status(400).json({ message: errorMessage });
@@ -57,7 +54,7 @@ router.post('/register', async (req: Request, res: Response) => {
 
   try {
     await Users.create(user);
-    logger.debug(`User created: ${user}`)
+    logger.debug(`User created: ${user}`);
     res.json({ message: "done" });
   } catch (error) {
     logger.error(`Error while creating user: ${error}`);
@@ -65,37 +62,41 @@ router.post('/register', async (req: Request, res: Response) => {
   }
 });
 
-
-
-
 // POST LOGIN AUTH:
-router.post('/auth/login', async (req : Request, res : Response) => {
+router.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
     const user = await Users.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).send('User not found');
+    }
+
+    if (typeof password !== 'string') {
+      return res.status(400).send('Invalid password');
+    }
+
+    if (!user.password) {
+      return res.status(400).send('No password set for this user');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Identifiants invalides' });
+    if (isPasswordValid) {
+      const userData = {
+        user_id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        birthday: user.birthday
+      };
+      return res.status(200).json(userData);
+    } else {
+      return res.status(401).send('Incorrect password');
     }
-
-    return res.status(200).json({
-      user_id: user._id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      birthday : user.birthday
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'An error occurred during login' });
+  } catch (error: any) {
+    logger.error(`Error while logging in: ${error}`);
+    res.status(500).send('Internal Server Error' + error);
   }
 });
-
-
 
 export { router as auth_routes };
