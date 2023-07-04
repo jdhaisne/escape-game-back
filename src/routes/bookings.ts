@@ -3,7 +3,7 @@ import { Bookings } from '../models/EMBooking';
 import { logger } from '../services/ESLogger';
 import { Users } from '../models/EMUser';
 import { Rooms } from '../models/EMRoom';
-
+import { IBooking } from '../interfaces/IBooking';
 import  mongoose from 'mongoose'
 // import { ObjectId } from 'mongoose';
 
