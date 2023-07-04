@@ -2,7 +2,6 @@ import express, { Router, Request, Response } from 'express';
 import { Rooms } from '../models/EMRoom';
 
 
-
 const router: Router = express.Router();
 
 

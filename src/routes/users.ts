@@ -24,29 +24,38 @@ router.get('/', async (req: Request, res: Response) => {
 
 // GET A SPECIFIC USER DATA : 
 router.get('/:id', async (req: Request, res: Response) => {
-    logger.debug(req.params.id)
-    res.send({message : "MESSAGE"})
-}); 
-  
+  try {
+    const userId = req.params.id;
+    const user = await Users.findById(userId).exec();
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.send(user);
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // POST ALLOW THE USER TO DELETE HIS ACCOUNT : 
-router.post('/:id/delete-my-account', async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   const userId = req.params.id;
 
   try {
     // Delete the user
     const result = await Users.deleteOne({ _id: userId });
 
-    if (result.deletedCount && result.deletedCount > 0) {
+    if (result.deletedCount > 0) {
       res.status(200).json({ message: 'Account deleted' });
     } else {
       res.status(404).json({ error: 'User not found' });
     }
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Error deleting user: ${error}`);
     res.status(500).json({ error: 'Failed to delete user' });
   }
 });
-  
 
 export { router as users_routes };

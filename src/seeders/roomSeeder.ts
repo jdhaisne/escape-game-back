@@ -4,8 +4,8 @@ import { logger } from "../services/ESLogger";
 
 export async function seedRooms(): Promise<void> {
   const roomData: IRoom[] = [
-    { name: 'Room 1', description: 'Description room 1', age_limit: 18, slots: 10 },
-    { name: 'Room 2', description: 'Description room 2', age_limit: 21, slots: 8 },
+    { name: 'Room 1', image : 'https://images.rtl.fr/~c/795v350/rtl/www/1342307-escape-game.jpg', description: 'Description room 1', age_limit: 18, slots: 10 },
+    { name: 'Room 2', image : 'https://trappesmag.fr/sites/trappesmag/files/styles/contenu/public/image/2020-06/sherlock.jpg', description: 'Description room 2', age_limit: 21, slots: 8 },
   ];
 
   try {
