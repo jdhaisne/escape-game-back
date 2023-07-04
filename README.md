@@ -111,7 +111,34 @@ usefull for the local storage.
     "image": "https://images.rtl.fr/~c/795v350/rtl/www/1342307-escape-game.jpg",
     "description": "Description room 1",
     "age_limit": 18,
-    "slots": 10
+    "slots": 10,
+     "availability": {
+        "monday": {
+          "morning": true,
+          "afternoon": true
+        },
+        "tuesday": {
+          "morning": true,
+          "afternoon": true
+        },
+        "wednesday": {
+          "morning": true,
+          "afternoon": true
+        },
+        "thursday": {
+          "morning": true,
+          "afternoon": true
+        },
+        "friday": {
+          "morning": true,
+          "afternoon": true
+        },
+        "saturday" :
+        {
+          "morning": true,
+          "afternoon": true
+        }
+      }
   }
 ]
 ```
