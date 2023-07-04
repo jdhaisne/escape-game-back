@@ -4,6 +4,9 @@ import { logger } from '../services/ESLogger';
 import { Users } from '../models/EMUser';
 import { Rooms } from '../models/EMRoom';
 import { IBooking } from '../interfaces/IBooking';
+import  mongoose from 'mongoose'
+// import { ObjectId } from 'mongoose';
+
 
 
 const router: Router = express.Router();
@@ -56,14 +59,29 @@ router.put('/:id', async (req, res) => {
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const userId = req.params.id;
+        // const db = mongoose.connection
+        // console.log('db',db )
+        // db.createView()
+        
 
         if (!userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+let doc = await Bookings.aggregate([
 
-        const bookings = await Bookings.find({ user: userId });
+  
+  {$match:{user_id: {$eq: new mongoose.Types.ObjectId(userId)}}},
+  {$lookup: { from: 'users', localField: 'user_id', foreignField: '_id', as: 'users' }},
+  {$lookup: { from: 'rooms', localField: 'room_id', foreignField: '_id', as: 'rooms' }},
+  // {$project: {
+  //   number_of_players: 1,
+  //   userMail: "$users.mail"
+  // }},
+  // { $unwind: "$userMail" }
+])
+        // const bookings = await Bookings.find({ user: userId });
 
-        res.json(bookings);
+        res.json(doc);
     } catch (error) {
         logger.error(`Error retrieving bookings: ${error}`);
         res.status(500).json({ error: 'Failed to retrieve bookings' });
