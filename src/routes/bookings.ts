@@ -67,6 +67,7 @@ router.get('/:id', async (req: Request, res: Response) => {
         if (!userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+        logger.debug(`user_id ${userId}`)
 let doc = await Bookings.aggregate([
 
   
@@ -80,7 +81,7 @@ let doc = await Bookings.aggregate([
   // { $unwind: "$userMail" }
 ])
         // const bookings = await Bookings.find({ user: userId });
-
+        logger.debug(`booking: ${doc}`)
         res.json(doc);
     } catch (error) {
         logger.error(`Error retrieving bookings: ${error}`);
