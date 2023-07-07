@@ -35,22 +35,24 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 });
 
-router.put('/:id', async (req: Request, res:Response) => {
+
+router.put('/:id/update-availability', async (req: Request, res: Response) => {
   const roomId = req.params.id;
+  const { availability } = req.body;
+
   try {
-    let room = await Rooms.findById(roomId);
+    const room = await Rooms.findById(roomId);
+
     if (room) {
-      Object.assign(room, req.body)
-      console.log(room,req.body)
-      const updatedRoom = await room.save()
+      room.availability = availability;
+      const updatedRoom = await room.save();
       res.status(200).json(updatedRoom);
     } else {
       res.status(404).json({ error: 'Room not found' });
     }
-    
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: 'Failed to update room availability' });
   }
-})
+});
 
 export { router as rooms_routes };
